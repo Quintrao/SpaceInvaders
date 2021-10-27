@@ -157,7 +157,7 @@ function create() {
     message.text = alpha + "   " + beta + "    " + gamma + "   "
    }
 
-   this.add.text(100, 400, "YOU WIN")
+   this.add.text(200, 400, "TEST")
    .setFontFamily("Arial")
    .setFontSize(32)
    .setColor("#ffff00");
