@@ -50,8 +50,8 @@ const ship = {
 let sec = true;
 let config = {
   type: Phaser.AUTO,
-  width: 400,
-  height: 600,
+  height: window.innerHeight,
+  width: window.innerWidth,
   physics: {
     default: "arcade",
     arcade: {
@@ -65,6 +65,9 @@ let config = {
   },
 };
 
+if (config.width>config.height*0.6)
+{config.width=config.height*0.6} 
+console.log(config.height, config.width)
 const game = new Phaser.Game(config);
 
 function preload() {
@@ -150,17 +153,13 @@ function create() {
   })
 
   function handleOrientation (event) {
-    const alpha = event.alpha
-    const beta = event.beta
-    const gamma = event.beta
+    const alpha = Math.floor(event.alpha)
+    const beta = Math.floor(event.beta)
+    const gamma = Math.floor(event.beta)
 
     message.text = alpha + "   " + beta + "    " + gamma + "   "
    }
 
-   this.add.text(200, 400, "TEST")
-   .setFontFamily("Arial")
-   .setFontSize(32)
-   .setColor("#ffff00");
 }
 
 function update() {
