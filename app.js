@@ -4,8 +4,8 @@
 
 const tutorialText = [
   "Попади выстрелом \nв надпись \n\nСтрелять - пробелом",
-  "Ау, как больно \n\nЕщё раз",
-  "И ещё",
+  "      Ау, как больно \n\n      Ещё раз",
+  "       И ещё",
 ];
 
 const aliens = [
@@ -110,7 +110,7 @@ function create() {
     );
     tutorial.setDisplaySize(config.width*0.75, config.height*0.4).setImmovable(true)
 
-    let x = config.width*0.25
+    let x = (config.width/4)*1.2
     let y = config.height*0.2;
 
     console.log(x, y);
@@ -138,9 +138,38 @@ function create() {
   currentText = hello();
 
   space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+  window.addEventListener('deviceorientation', handleOrientation, true)
+
+  let message = this.add.text(100, 550, "RRR", {
+    fontFamily: 'Roboto ,"Times New Roman", sans-serif',
+    fontSize: 16,
+    color: "#911",
+    align: "center",
+    verticalAlign: "center",
+  })
+
+  function handleOrientation (event) {
+    const alpha = event.alpha
+    const beta = event.beta
+    const gamma = event.beta
+
+    message.text = alpha + "   " + beta + "    " + gamma + "   "
+   }
+
+   this.add.text(100, 400, "YOU WIN")
+   .setFontFamily("Arial")
+   .setFontSize(32)
+   .setColor("#ffff00");
 }
 
 function update() {
+
+
+
+
+
+
   const createWave = (wave) => {
     const image = wave.texture;
     let invaders = [];
@@ -169,8 +198,7 @@ function update() {
   if (!count && !tutorialActive && !gameOver) {
     enemies = createWave(aliens[0]);
     count = enemies.length;
-    first = false;
-  }
+    }
 
   cursors = this.input.keyboard.createCursorKeys();
   if (cursors.left.isDown) {
@@ -258,7 +286,7 @@ function update() {
         tutorialActive = false
       }
     };
-    console.log(tutorial.height, tutorial.width);
+    // console.log(tutorial.height, tutorial.width);
 
     item.physics.add.collider(bullet, tutorial, nextGreet, null, this);
     item.physics.add.collider(bullet, enemies, hitAlien, null, this);
