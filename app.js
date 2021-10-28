@@ -127,7 +127,7 @@ function create() {
 
   space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-  window.addEventListener("deviceorientation", handleOrientation, true);
+  window.addEventListener("devicemotion", handleOrientation, true);
 
   let message = this.add.text(100, 550, "RRR", {
     fontFamily: 'Roboto ,"Times New Roman", sans-serif',
@@ -138,9 +138,9 @@ function create() {
   });
 
   function handleOrientation(event) {
-    const alpha = Math.floor(event.alpha);
-    const beta = Math.floor(event.beta);
-    const gamma = Math.floor(event.beta);
+    const alpha = Math.floor(event.accelerationIncludingGravity.x);
+    const beta = Math.floor(event.accelerationIncludingGravity.y);
+    const gamma = Math.floor(event.accelerationIncludingGravity.z);
 
     message.text = alpha + "        " + beta + "      " + gamma + "     ";
   }
