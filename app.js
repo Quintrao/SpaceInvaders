@@ -65,9 +65,13 @@ let config = {
   },
 };
 
-if (config.width>config.height*0.6)
-{config.width=config.height*0.6} 
-console.log(config.height, config.width)
+if (config.width > config.height * 0.6) {
+  config.width = config.height * 0.6;
+}
+console.log(config.height, config.width);
+const tab = config.height / 6;
+console.log(tab);
+
 const game = new Phaser.Game(config);
 
 function preload() {
@@ -82,39 +86,27 @@ function create() {
   gameOver = false;
   count = 0;
   wave = 0;
-  k=0
+  k = 0;
   enemies = [];
   tutorialActive = true;
 
-  player = this.physics.add.sprite(200, 500, "ship");
-  player.setDisplaySize(50, 50);
+  player = this.physics.add.sprite(config.width/2, config.height*5/6, "ship");
+  player.setDisplaySize(tab/2, tab/2);
   player.setBounce(0.2);
   player.setCollideWorldBounds(true);
 
   const hello = () => {
-    // graphics = this.add.graphics();
-    // graphics.fillStyle(0xffff00, 1);
-    // graphics.fillRoundedRect(
-    //   config.width / 6,
-    //   config.height / 12,
-    //   (config.width * 2) / 3,
-    //   config.height / 4,
-    //   32
-    // );
-    // graphics.generateTexture("tut", (config.width * 2) / 3, config.height / 4);
-    // graphics.destroy();
-    // // , config.height*2/3, config.height/4)
     tutorial = this.physics.add.sprite(
       config.width / 2,
       config.height / 4,
-      // config.width / 2,
-      // config.height / 2,
       "banner"
     );
-    tutorial.setDisplaySize(config.width*0.75, config.height*0.4).setImmovable(true)
+    tutorial
+      .setDisplaySize(config.width * 0.75, config.height * 0.4)
+      .setImmovable(true);
 
-    let x = (config.width/4)*1.2
-    let y = config.height*0.2;
+    let x = (config.width / 4) * 1.2;
+    let y = config.height * 0.2;
 
     console.log(x, y);
     console.log(tutorial.x, tutorial.y);
@@ -127,48 +119,40 @@ function create() {
       align: "center",
       verticalAlign: "center",
     });
-    // greet.setStroke("#000", 16);
-    // const gradient = greet.context.createLinearGradient(0, 0, 0, greet.height);
-    // gradient.addColorStop(0, '#111111');
-    // gradient.addColorStop(.5, '#ffffff');
-    // gradient.addColorStop(.5, '#aaaaaa');
-    // gradient.addColorStop(1, '#111111');
-    // greet.setFill(gradient)
 
-    return greet
+    return greet;
   };
 
   currentText = hello();
 
   space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-  window.addEventListener('deviceorientation', handleOrientation, true)
+  window.addEventListener("deviceorientation", handleOrientation, true);
 
   let message = this.add.text(100, 550, "RRR", {
     fontFamily: 'Roboto ,"Times New Roman", sans-serif',
-    fontSize: 16,
-    color: "#911",
+    fontSize: 32,
+    color: "#f00",
     align: "center",
     verticalAlign: "center",
-  })
+  });
 
-  function handleOrientation (event) {
-    const alpha = Math.floor(event.alpha)
-    const beta = Math.floor(event.beta)
-    const gamma = Math.floor(event.beta)
+  function handleOrientation(event) {
+    const alpha = Math.floor(event.alpha);
+    const beta = Math.floor(event.beta);
+    const gamma = Math.floor(event.beta);
 
-    message.text = alpha + "   " + beta + "    " + gamma + "   "
-   }
+    message.text = alpha + "        " + beta + "      " + gamma + "     ";
+  }
 
+  window.addEventListener("touchstart", shotTouch, true);
+
+  function shotTouch(event) {
+    shot(window);
+  }
 }
 
 function update() {
-
-
-
-
-
-
   const createWave = (wave) => {
     const image = wave.texture;
     let invaders = [];
@@ -197,7 +181,7 @@ function update() {
   if (!count && !tutorialActive && !gameOver) {
     enemies = createWave(aliens[0]);
     count = enemies.length;
-    }
+  }
 
   cursors = this.input.keyboard.createCursorKeys();
   if (cursors.left.isDown) {
@@ -276,13 +260,13 @@ function update() {
       setTimeout(() => {
         tutorial.clearTint();
       }, 50);
-      k++
-      currentText.text = tutorialText[k]
-      console.log(k)
-      if (k===tutorialText.length) {
-        tutorial.disableBody(true, true)
-        wave = 0
-        tutorialActive = false
+      k++;
+      currentText.text = tutorialText[k];
+      console.log(k);
+      if (k === tutorialText.length) {
+        tutorial.disableBody(true, true);
+        wave = 0;
+        tutorialActive = false;
       }
     };
     // console.log(tutorial.height, tutorial.width);
@@ -310,19 +294,18 @@ function update() {
 
       if (count === 0) {
         createBonus(x, y);
-        wave++
-        console.log(wave)
+        wave++;
+        console.log(wave);
         if (aliens[wave]) {
-        enemies = createWave(aliens[wave]);
-        count = enemies.length; }
-        else {
-          gameOver = true
-          item.add.text(100, 400, "YOU WIN")
-          .setFontFamily("Arial")
-          .setFontSize(32)
-          .setColor("#ffff00");
-
-
+          enemies = createWave(aliens[wave]);
+          count = enemies.length;
+        } else {
+          gameOver = true;
+          item.add
+            .text(100, 400, "YOU WIN")
+            .setFontFamily("Arial")
+            .setFontSize(32)
+            .setColor("#ffff00");
         }
       }
     }
