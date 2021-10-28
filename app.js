@@ -90,8 +90,12 @@ function create() {
   enemies = [];
   tutorialActive = true;
 
-  player = this.physics.add.sprite(config.width/2, config.height*5/6, "ship");
-  player.setDisplaySize(tab/2, tab/2);
+  player = this.physics.add.sprite(
+    config.width / 2,
+    (config.height * 5) / 6,
+    "ship"
+  );
+  player.setDisplaySize(tab / 2, tab / 2);
   player.setBounce(0.2);
   player.setCollideWorldBounds(true);
 
@@ -136,20 +140,33 @@ function create() {
     align: "center",
     verticalAlign: "center",
   });
+  let speedX, speedY;
 
   function handleOrientation(event) {
     const alpha = Math.floor(event.accelerationIncludingGravity.x);
     const beta = Math.floor(event.accelerationIncludingGravity.y);
     const gamma = Math.floor(event.accelerationIncludingGravity.z);
 
-    message.text = alpha + "        " + beta + "      " + gamma + "     ";
+    speedX = Math.floor(alpha / 2) * 20;
+    speedY = Math.floor(beta / 2) * 20;
+
+    message.text =
+      alpha +
+      "        " +
+      beta +
+      "      " +
+      gamma +
+      "     " +
+      speedX +
+      "    " +
+      speedY;
   }
 
-  window.addEventListener("touchstart", shotTouch, true);
+  window.addEventListener("touchstart", shot, true);
 
-  function shotTouch(event) {
-    shot(window);
-  }
+  // function shotTouch(event) {
+  //   shot(window);
+  // }
 }
 
 function update() {
@@ -188,6 +205,8 @@ function update() {
     player.setVelocityX(-ship.speed);
   } else if (cursors.right.isDown) {
     player.setVelocityX(ship.speed);
+  } else if (speedX) {
+    player.setVelocityX(-speedX);
   } else {
     player.setVelocityX(0);
   }
@@ -196,6 +215,8 @@ function update() {
     player.setVelocityY(-ship.speed);
   } else if (cursors.down.isDown) {
     player.setVelocityY(ship.speed);
+  } else if (speedY) {
+    player.setVelocityY(-speedY);
   } else {
     player.setVelocityY(0);
   }
