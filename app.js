@@ -140,7 +140,8 @@ function create() {
     align: "center",
     verticalAlign: "center",
   });
-  let speedX, speedY;
+  speedX = 0; 
+  speedY = 0;
 
   function handleOrientation(event) {
     const alpha = Math.floor(event.accelerationIncludingGravity.x);
@@ -162,7 +163,7 @@ function create() {
       speedY;
   }
 
-  window.addEventListener("touchstart", shot, true);
+  // window.addEventListener("touchstart", shot, true);
 
   // function shotTouch(event) {
   //   shot(window);
