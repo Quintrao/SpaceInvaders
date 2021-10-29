@@ -12,31 +12,31 @@ const aliens = [
   {
     rows: [5],
     texture: "enemy-white",
-    height: 50,
-    width: 50,
+    height: 1,
+    width: 1,
     HP: 3,
   },
 
   {
     rows: [3, 4, 3],
     texture: "enemy-white",
-    height: 50,
-    width: 50,
+    height: 1,
+    width: 1,
     HP: 3,
   },
 
   {
     rows: [4, 5, 4],
     texture: "enemy-white",
-    height: 50,
-    width: 50,
+    height: 1,
+    width: 1,
     HP: 2,
   },
   {
     rows: [5, 4, 5],
     texture: "enemy-white",
-    height: 50,
-    width: 50,
+    height: 1,
+    width: 1,
     HP: 2,
   },
 ];
@@ -69,7 +69,7 @@ if (config.width > config.height * 0.6) {
   config.width = config.height * 0.6;
 }
 console.log(config.height, config.width);
-const tab = config.height / 6;
+const tab = config.height / 12;
 console.log(tab);
 
 const game = new Phaser.Game(config);
@@ -95,7 +95,7 @@ function create() {
     (config.height * 5) / 6,
     "ship"
   );
-  player.setDisplaySize(tab / 2, tab / 2);
+  player.setDisplaySize(tab, tab);
   player.setBounce(0.2);
   player.setCollideWorldBounds(true);
 
@@ -113,7 +113,7 @@ function create() {
     let y = config.height * 0.2;
 
     console.log(x, y);
-    console.log(tutorial.x, tutorial.y);
+    // console.log(tutorial.x, tutorial.y);
     console.log(tutorial.displayWidth, tutorial.displayHeight);
 
     let greet = this.add.text(x, y, tutorialText[0], {
@@ -133,16 +133,16 @@ function create() {
 
   window.addEventListener("devicemotion", handleOrientation, true);
 
-  let message = this.add.text(100, config.height*0.8, "RRR", {
+  let message = this.add.text(100, config.height * 0.8, "RRR", {
     fontFamily: 'Roboto ,"Times New Roman", sans-serif',
     fontSize: 32,
     color: "#f00",
     align: "center",
     verticalAlign: "center",
   });
-  speedX = 0; 
+  speedX = 0;
   speedY = 0;
-  shooting = false
+  shooting = false;
 
   function handleOrientation(event) {
     const alpha = Math.floor(event.accelerationIncludingGravity.x);
@@ -150,8 +150,8 @@ function create() {
     const gamma = Math.floor(event.accelerationIncludingGravity.z);
 
     if (beta) {
-    speedX = Math.floor((alpha / 2)) * 30;
-    speedY = Math.floor((beta / 2)-7) * 20;
+      speedX = Math.floor(alpha / 2) * 30;
+      speedY = Math.floor(beta - 7 / 2) * 20;
     }
 
     message.text =
@@ -166,23 +166,35 @@ function create() {
       speedY;
   }
 
-  window.addEventListener("touchstart", shotTouch, true);
-  window.addEventListener("touchend", shotTouchEnd, true);
+  window.addEventListener(
+    "touchstart",
+    () => {
+      shooting = true;
+    },
+    true
+  );
+  window.addEventListener(
+    "touchend",
+    () => {
+      shooting = false;
+    },
+    true
+  );
 
-  function shotTouch(event) {
-    shooting = true;
-  }
+  // function shotTouch(event) {
+  //   shooting = true;
+  // }
 
-  function shotTouchEnd(event) {
-    shooting = false;
-  }
+  // function shotTouchEnd(event) {
+  //   shooting = false;
+  // }
 }
 
 function update() {
   const createWave = (wave) => {
     const image = wave.texture;
     let invaders = [];
-    let width = wave.width;
+    let width = wave.width*tab;
     let height = width;
     for (let k = 0; k < wave.rows.length; k++)
       if (wave.rows[k]) {
@@ -238,7 +250,7 @@ function update() {
 
   const createBonus = (x, y) => {
     bonus = this.physics.add.sprite(x, y, "star");
-    bonus.setDisplaySize(50, 50);
+    bonus.setDisplaySize(tab, tab);
     bonus.setVelocityY(100);
     this.physics.add.collider(bonus, player, speedIncrease, null, this);
 
