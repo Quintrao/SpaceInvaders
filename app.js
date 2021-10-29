@@ -3,7 +3,7 @@
 // import * as Phaser from "./phaser.js"
 
 const tutorialText = [
-  "Попади выстрелом \nв надпись \n\nСтрелять - пробелом",
+  "Попади выстрелом \nв надпись \n\nСтрелять - пробелом/\nнажатием на экран",
   "      Ау, как больно \n\n      Ещё раз",
   "       И ещё",
 ];
@@ -133,7 +133,7 @@ function create() {
 
   window.addEventListener("devicemotion", handleOrientation, true);
 
-  let message = this.add.text(100, 550, "RRR", {
+  let message = this.add.text(100, config.height*0.8, "RRR", {
     fontFamily: 'Roboto ,"Times New Roman", sans-serif',
     fontSize: 32,
     color: "#f00",
@@ -142,14 +142,17 @@ function create() {
   });
   speedX = 0; 
   speedY = 0;
+  shooting = false
 
   function handleOrientation(event) {
     const alpha = Math.floor(event.accelerationIncludingGravity.x);
     const beta = Math.floor(event.accelerationIncludingGravity.y);
     const gamma = Math.floor(event.accelerationIncludingGravity.z);
 
-    speedX = Math.floor(alpha / 2) * 20;
-    speedY = Math.floor(beta / 2) * 20;
+    if (beta) {
+    speedX = Math.floor((alpha / 2)) * 30;
+    speedY = Math.floor((beta / 2)-7) * 20;
+    }
 
     message.text =
       alpha +
@@ -163,11 +166,16 @@ function create() {
       speedY;
   }
 
-  // window.addEventListener("touchstart", shot, true);
+  window.addEventListener("touchstart", shotTouch, true);
+  window.addEventListener("touchend", shotTouchEnd, true);
 
-  // function shotTouch(event) {
-  //   shot(window);
-  // }
+  function shotTouch(event) {
+    shooting = true;
+  }
+
+  function shotTouchEnd(event) {
+    shooting = false;
+  }
 }
 
 function update() {
@@ -222,7 +230,7 @@ function update() {
     player.setVelocityY(0);
   }
 
-  if (space.isDown && sec) {
+  if ((space.isDown && sec) || (shooting && sec)) {
     sec = false;
     shot(this);
     setTimeout(() => (sec = true), ship.reload);
@@ -295,9 +303,6 @@ function update() {
 
     item.physics.add.collider(bullet, tutorial, nextGreet, null, this);
     item.physics.add.collider(bullet, enemies, hitAlien, null, this);
-    if (tutorialActive) {
-      // console.log(tutorial.x, tutorial.y)
-    }
 
     function hitAlien(bullet, enemy) {
       enemy.setTintFill(0xff0000);
